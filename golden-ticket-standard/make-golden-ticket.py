@@ -2,38 +2,24 @@ import re
 import printing as p
 
 def main ():
-    # First, we want to get a ticket number
-    link = p.ask("What ticket are you working on?")
-    link = link.upper()
-    if re.match(r"^EZ\-[0-9]{4}[0-9]*", link) or link == "HM-66": # TODO @Ben remove this HM-66 check
-        p.success("Cool! Using " + link)
-        done = p.ask("Is this moving to Done? y/n")
-        done = done.lower()
-        if done != 'y':
-            nwr = p.ask("Is this a 'No work required'? y/n")
-            if nwr != 'y':
-                p.err("If it's not 'Done' or 'No work required', idk what you're on.")
-                return
-            comment = get_nwr_comment()
-        else:
-            comment = get_done_comment()
-        if comment == "":
+    done = p.ask("Is this moving to Done? y/n")
+    done = done.lower()
+    if done != 'y':
+        nwr = p.ask("Is this a 'No work required'? y/n")
+        if nwr != 'y':
+            p.err("If it's not 'Done' or 'No work required', idk what you're on.")
             return
-        comment = comment.rstrip()
-        p.info("=====  START  =====")
-        p.info("")
-        p.info(comment)
-        p.info("")
-        p.info("=====   END   =====")
-#        send = p.ask("Want me to send that to Jira for you? y/n")
-#        send = send.lower()
-#        if send == 'y':
-            # TODO @Ben send it
-#            var = 1
-#        else:
-#            p.info("K. It's over.")
-    else: 
-        p.err(link + " doesn't seem like a real JIRA ticket...")
+        comment = get_nwr_comment()
+    else:
+        comment = get_done_comment()
+    if comment == "":
+        return
+    comment = comment.rstrip()
+    p.info("=====  START  =====")
+    p.info("")
+    p.info(comment)
+    p.info("")
+    p.info("=====   END   =====")
 
 def get_done_comment ():
     fix_version = p.ask("What version was this fixed in?")
